@@ -1,0 +1,5 @@
+{
+  "name": "AI 电商视觉引擎",
+  "description": "一款智能电商视觉引擎，采用多智能体架构分析产品照片，建议高端审美场景，并生成营销文案。",
+  "requestFramePermissions": ["camera"]
+}
