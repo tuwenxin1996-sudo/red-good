@@ -15,7 +15,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     });
   }
 
-  const ai = new GoogleGenAI(env.GEMINI_API_KEY);
+  const ai = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
   const body: any = await request.json();
   const { action, payload } = body;
 
