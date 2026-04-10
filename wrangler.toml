@@ -1,9 +1,0 @@
-name = "ai-ecommerce-vision"
-pages_build_output_dir = "dist"
-
-[vars]
-# For local dev only. Production vars should be set in Cloudflare Dashboard.
-# GEMINI_API_KEY = "..."
-
-[dev]
-port = 3000
