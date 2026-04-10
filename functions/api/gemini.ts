@@ -57,30 +57,49 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       }
 
       case "generate_image": {
-        const model = ai.getGenerativeModel({ model: "gemini-2.5-flash-image" });
-        const result = await model.generateContent([
-          {
-            inlineData: {
-              mimeType: "image/jpeg",
-              data: payload.imageBase64,
-            },
-          },
-          `你是一位顶尖的电商摄影师和后期修图师。请保留图中产品的主体，完全不要改变产品的外观、形状和细节。
+        if (!env.VOLCENGINE_API_KEY) {
+          return new Response(JSON.stringify({ error: "VOLCENGINE_API_KEY not configured on server" }), {
+            status: 500,
+            headers: { "Content-Type": "application/json" },
+          });
+        }
+
+        const prompt = `你是一位顶尖的电商摄影师和后期修图师。请保留图中产品的主体，完全不要改变产品的外观、形状和细节。
           请将背景替换为一个专业、高端的电商背景，风格必须符合“${payload.theme.name}”：${payload.theme.description}。
           视觉元素应包含：${payload.theme.visualElements.join('、')}。
           整体色调应符合：${payload.theme.colorPalette.join('、')}。
           光影要求：${payload.analysis.lighting}。
-          最终效果应该像是在专业影棚拍摄的爆款详情页主图。`,
-        ]);
+          最终效果应该像是在专业影棚拍摄的爆款详情页主图。`;
 
-        for (const part of result.response.candidates?.[0]?.content?.parts || []) {
-          if (part.inlineData) {
-            return new Response(JSON.stringify({ image: `data:image/png;base64,${part.inlineData.data}` }), {
-              headers: { "Content-Type": "application/json" },
-            });
-          }
+        const volcRes = await fetch("https://ark.cn-beijing.volces.com/api/v3/images/generations", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${env.VOLCENGINE_API_KEY}`
+          },
+          body: JSON.stringify({
+             model: "doubao-seedream-4-5-251128",
+             prompt: prompt,
+             image: [`data:image/jpeg;base64,${payload.imageBase64}`],
+             response_format: "b64_json"
+          })
+        });
+
+        if (!volcRes.ok) {
+           const errText = await volcRes.text();
+           throw new Error(`Volcengine API error: ${errText}`);
         }
-        throw new Error("未能生成图像");
+
+        const data: any = await volcRes.json();
+        const generatedB64 = data.data?.[0]?.b64_json;
+        
+        if (!generatedB64) {
+            throw new Error("火山引擎接口未正常返回图像数据");
+        }
+
+        return new Response(JSON.stringify({ image: `data:image/png;base64,${generatedB64}` }), {
+          headers: { "Content-Type": "application/json" },
+        });
       }
 
       default:
