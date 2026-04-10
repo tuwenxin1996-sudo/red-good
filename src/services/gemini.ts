@@ -62,32 +62,3 @@ export async function generateProductImage(imageBase64: string, analysis: SceneA
   const result = await callProxy("generate_image", { imageBase64, analysis, theme });
   return result.image;
 }
-i-2.5-flash-image",
-    contents: {
-      parts: [
-        {
-          inlineData: {
-            mimeType: "image/jpeg",
-            data: imageBase64,
-          },
-        },
-        {
-          text: `你是一位顶尖的电商摄影师和后期修图师。请保留图中产品的主体，完全不要改变产品的外观、形状和细节。
-          请将背景替换为一个专业、高端的电商背景，风格必须符合“${theme.name}”：${theme.description}。
-          视觉元素应包含：${theme.visualElements.join('、')}。
-          整体色调应符合：${theme.colorPalette.join('、')}。
-          光影要求：${analysis.lighting}。
-          最终效果应该像是在专业影棚拍摄的爆款详情页主图。`,
-        },
-      ],
-    },
-  });
-
-  for (const part of response.candidates?.[0]?.content?.parts || []) {
-    if (part.inlineData) {
-      return `data:image/png;base64,${part.inlineData.data}`;
-    }
-  }
-
-  throw new Error("未能生成图像");
-}
