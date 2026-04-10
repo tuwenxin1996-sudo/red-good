@@ -1,0 +1,4 @@
+#:schema https://cloudflarerepro.github.io/pages-shared/wrangler.schema.json
+name = "red-good"
+compatibility_date = "2024-04-10"
+pages_build_output_dir = "dist"
