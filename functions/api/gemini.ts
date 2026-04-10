@@ -2,6 +2,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 
 interface Env {
   GEMINI_API_KEY: string;
+  VOLCENGINE_API_KEY?: string;
 }
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
