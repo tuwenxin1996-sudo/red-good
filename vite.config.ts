@@ -122,13 +122,17 @@ function volcengineVPNBypassProxy(): Plugin {
                 result = JSON.stringify(b64 ? { image: `data:image/png;base64,${b64}` } : { image: url });
               } else {
                 let content = apiData.choices[0].message.content;
-                // 去除可能产生的 markdown 标签
-                if (content.startsWith('```json')) content = content.replace(/```json\n?/, '').replace(/```\n?$/, '');
                 
+                // 更强大的 JSON 提取逻辑：从文本中找到第一个 { 或 [ 到最后一个 } 或 ] 之间的内容
+                const jsonMatch = content.match(/(\{[\s\S]*\}|\[[\s\S]*\])/);
+                if (jsonMatch) {
+                  content = jsonMatch[0];
+                }
+
                 if (action === 'suggest') {
                   try {
                     const parsed = JSON.parse(content);
-                    // 兼容格式抖动
+                    // 兼容格式抖动：确保返回的是数组
                     if (!Array.isArray(parsed)) {
                       const arr = Object.values(parsed).find(v => Array.isArray(v));
                       if (arr) content = JSON.stringify(arr);

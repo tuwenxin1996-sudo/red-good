@@ -144,9 +144,17 @@ ${JSON.stringify(payload.analysis, null, 2)}
         
         // 豆包可能返回 { "themes": [...] } 或直接返回 [...]
         let content = data.choices[0].message.content;
+        const jsonMatch = content.match(/(\{[\s\S]*\}|\[[\s\S]*\])/);
+        if (jsonMatch) content = jsonMatch[0];
+        
+        // 鲁棒的 JSON 提取：找到最外层的 [] 或 {}
+        const jsonMatch = content.match(/(\{[\s\S]*\}|\[[\s\S]*\])/);
+        if (jsonMatch) {
+          content = jsonMatch[0];
+        }
+
         try {
           const parsed = JSON.parse(content);
-          // 如果返回的是对象而不是数组，尝试提取数组
           if (!Array.isArray(parsed)) {
             const arrayValue = Object.values(parsed).find(v => Array.isArray(v));
             if (arrayValue) {
@@ -154,7 +162,7 @@ ${JSON.stringify(payload.analysis, null, 2)}
             }
           }
         } catch (e) {
-          // 如果解析失败，直接传递原始内容
+          // 解析失败保留原样，由前端 service 层兜底
         }
         
         return new Response(content, { headers: { "Content-Type": "application/json" } });
