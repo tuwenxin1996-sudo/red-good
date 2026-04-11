@@ -14,8 +14,10 @@ var onRequestPost = /* @__PURE__ */ __name(async (context) => {
   const { action, payload } = body;
   const BASE_URL = "https://ark.cn-beijing.volces.com/api/v3";
   try {
+    console.log(`[Proxy] Action: ${action}, Model: ${env.VOLCENGINE_ENDPOINT_ID}`);
     switch (action) {
       case "analyze": {
+        console.log("[Proxy] Calling Volcengine Vision...");
         const response = await fetch(`${BASE_URL}/chat/completions`, {
           method: "POST",
           headers: {
@@ -44,12 +46,15 @@ var onRequestPost = /* @__PURE__ */ __name(async (context) => {
             response_format: { type: "json_object" }
           })
         });
+        console.log(`[Proxy] Volcengine Response Status: ${response.status}`);
         const data = await response.json();
+        console.log("[Proxy] Volcengine Data Parsed.");
         return new Response(data.choices[0].message.content, {
           headers: { "Content-Type": "application/json" }
         });
       }
       case "suggest": {
+        console.log("[Proxy] Calling Volcengine Suggest (Text)...");
         const response = await fetch(`${BASE_URL}/chat/completions`, {
           method: "POST",
           headers: {
@@ -67,7 +72,9 @@ var onRequestPost = /* @__PURE__ */ __name(async (context) => {
             response_format: { type: "json_object" }
           })
         });
+        console.log(`[Proxy] Volcengine Response Status: ${response.status}`);
         const data = await response.json();
+        console.log("[Proxy] Volcengine Data Parsed.");
         const content = data.choices[0].message.content;
         return new Response(content, {
           headers: { "Content-Type": "application/json" }
@@ -642,7 +649,7 @@ var jsonError = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx)
 }, "jsonError");
 var middleware_miniflare3_json_error_default = jsonError;
 
-// ../.wrangler/tmp/bundle-7aUi6f/middleware-insertion-facade.js
+// ../.wrangler/tmp/bundle-8Frtlp/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__ = [
   middleware_ensure_req_body_drained_default,
   middleware_miniflare3_json_error_default
@@ -674,7 +681,7 @@ function __facade_invoke__(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__, "__facade_invoke__");
 
-// ../.wrangler/tmp/bundle-7aUi6f/middleware-loader.entry.ts
+// ../.wrangler/tmp/bundle-8Frtlp/middleware-loader.entry.ts
 var __Facade_ScheduledController__ = class ___Facade_ScheduledController__ {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;

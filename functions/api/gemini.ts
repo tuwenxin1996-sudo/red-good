@@ -168,13 +168,13 @@ ${JSON.stringify(payload.analysis, null, 2)}
       case "generate_image": {
         console.log("[Agent D] 视觉生成师启动...");
         
-        // 拼接精准的生图 Prompt
-        const prompt = `商业电商产品摄影，保留产品主体不变，将背景替换为"${payload.theme.name}"风格场景。
+        // 拼接精准的生图 Prompt，严格强调禁止主体改变
+        const prompt = `【图生图指令 - 绝对保持主体不变】商业电商产品摄影，将输入图片中的商品主体完美抠出并融合到"${payload.theme.name}"风格场景中。
 场景描述：${payload.theme.description}
 包含视觉元素：${payload.theme.visualElements.join('、')}
 整体色调：${payload.theme.colorPalette.join('、')}
 光影要求：匹配${payload.analysis.lighting}
-最终效果：专业影棚级别的电商爆款详情页主图，产品主体清晰锐利，背景自然融合，光影过渡流畅。`;
+最终效果：绝对禁止改变商品原本的设计、材质、颜色和形状，仅可微调主体角度以适应透视关系，生成专业影棚级电商爆款详情页主图，背景自然融合，光影过渡流畅。`;
 
         const response = await fetchWithTimeout(`${BASE_URL}/images/generations`, {
           method: "POST",
@@ -182,6 +182,7 @@ ${JSON.stringify(payload.analysis, null, 2)}
           body: JSON.stringify({
             model: "doubao-seedream-5-0-260128",
             prompt: prompt,
+            image: `data:image/jpeg;base64,${payload.imageBase64}`,
             response_format: "b64_json",
             size: "2048x2048"
           })

@@ -370,7 +370,7 @@ export default function App() {
                           <div className="space-y-3">
                             <p className="text-xs text-muted-foreground uppercase font-bold">核心特征</p>
                             <div className="flex flex-wrap gap-2">
-                              {analysis?.features.map((f, i) => (
+                              {(analysis?.features || []).map((f, i) => (
                                 <Badge key={i} variant="secondary" className="bg-muted text-foreground hover:bg-accent">
                                   {f}
                                 </Badge>
@@ -387,7 +387,7 @@ export default function App() {
 
                     <TabsContent value="design" className="mt-6 space-y-6">
                       <div className="grid gap-4">
-                        {themes.map((theme, i) => (
+                        {(themes || []).map((theme, i) => (
                           <Card 
                             key={i} 
                             className={`bg-card border-border cursor-pointer transition-all hover:border-primary/50
@@ -407,7 +407,7 @@ export default function App() {
                                 </div>
                                 <p className="text-sm text-muted-foreground leading-relaxed">{theme.description}</p>
                                 <div className="flex items-center gap-2">
-                                  {theme.colorPalette.map((color, ci) => (
+                                  {(theme.colorPalette || []).map((color, ci) => (
                                     <div 
                                       key={ci} 
                                       className="w-6 h-6 rounded-full border border-border" 
@@ -449,7 +449,7 @@ export default function App() {
                         </CardHeader>
                         <CardContent className="pt-8 space-y-8">
                           <div className="grid gap-4">
-                            {marketing?.hooks.map((hook, i) => (
+                            {(marketing?.hooks || []).map((hook, i) => (
                               <div key={i} className="flex items-start gap-3 p-4 bg-accent/30 rounded-lg border border-border">
                                 <Sparkles className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                                 <p className="text-sm font-medium">{hook}</p>
@@ -462,7 +462,7 @@ export default function App() {
                               {marketing?.body}
                             </div>
                             <div className="mt-8 flex flex-wrap gap-2">
-                              {marketing?.tags.map((tag, i) => (
+                              {(marketing?.tags || []).map((tag, i) => (
                                 <span key={i} className="text-primary text-sm font-medium">#{tag}</span>
                               ))}
                             </div>

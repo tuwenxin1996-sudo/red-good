@@ -88,7 +88,8 @@ function volcengineVPNBypassProxy(): Plugin {
                 apiUrl = `${BASE_URL}/images/generations`;
                 apiBody = {
                   model: 'doubao-seedream-5-0-260128',
-                  prompt: `商业电商产品摄影，"${payload.theme.name}"风格场景。${payload.theme.description}。包含：${payload.theme.visualElements.join('、')}。色调：${payload.theme.colorPalette.join('、')}。光影：${payload.analysis.lighting}。专业影棚级电商主图，产品主体清晰锐利。`,
+                  prompt: `【图生图指令 - 绝对保持主体不变】商业电商产品摄影，将输入图片中的商品主体完美抠出并融合到"${payload.theme.name}"风格场景中。场景描述：${payload.theme.description}。包含元素：${payload.theme.visualElements.join('、')}。氛围色调：${payload.theme.colorPalette.join('、')}。匹配光影：${payload.analysis.lighting}。要求：绝对禁止改变商品原本的设计、材质、颜色和形状，仅可微调主体角度以适应透视关系，生成专业影棚级电商主图，背景自然真实。`,
+                  image: `data:image/jpeg;base64,${payload.imageBase64}`,
                   response_format: 'b64_json',
                   size: '2048x2048'
                 };

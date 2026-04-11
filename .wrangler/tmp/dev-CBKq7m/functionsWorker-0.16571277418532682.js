@@ -16,8 +16,10 @@ var onRequestPost = /* @__PURE__ */ __name2(async (context) => {
   const { action, payload } = body;
   const BASE_URL = "https://ark.cn-beijing.volces.com/api/v3";
   try {
+    console.log(`[Proxy] Action: ${action}, Model: ${env.VOLCENGINE_ENDPOINT_ID}`);
     switch (action) {
       case "analyze": {
+        console.log("[Proxy] Calling Volcengine Vision...");
         const response = await fetch(`${BASE_URL}/chat/completions`, {
           method: "POST",
           headers: {
@@ -46,12 +48,15 @@ var onRequestPost = /* @__PURE__ */ __name2(async (context) => {
             response_format: { type: "json_object" }
           })
         });
+        console.log(`[Proxy] Volcengine Response Status: ${response.status}`);
         const data = await response.json();
+        console.log("[Proxy] Volcengine Data Parsed.");
         return new Response(data.choices[0].message.content, {
           headers: { "Content-Type": "application/json" }
         });
       }
       case "suggest": {
+        console.log("[Proxy] Calling Volcengine Suggest (Text)...");
         const response = await fetch(`${BASE_URL}/chat/completions`, {
           method: "POST",
           headers: {
@@ -69,7 +74,9 @@ var onRequestPost = /* @__PURE__ */ __name2(async (context) => {
             response_format: { type: "json_object" }
           })
         });
+        console.log(`[Proxy] Volcengine Response Status: ${response.status}`);
         const data = await response.json();
+        console.log("[Proxy] Volcengine Data Parsed.");
         const content = data.choices[0].message.content;
         return new Response(content, {
           headers: { "Content-Type": "application/json" }
