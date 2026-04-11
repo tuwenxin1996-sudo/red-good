@@ -490,7 +490,7 @@ export default function App() {
               <span className="font-bold">AI 视觉引擎</span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              由 Gemini 3.0 和 LangGraph 架构驱动。
+              由火山引擎豆包大模型和 Seedream 5.0 驱动。
               为下一代电子商务而构建。
             </p>
           </div>
