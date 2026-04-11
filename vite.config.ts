@@ -175,7 +175,7 @@ export default defineConfig(() => {
         '@': path.resolve(__dirname, '.'),
       },
     },
-    server: {
+    server: {\n      watch: {\n        ignored: ['**/ .wrangler/**', '**/dist/**', '**/node_modules/**']\n      },
       hmr: process.env.DISABLE_HMR !== 'true',
       port: 3000,
     },
