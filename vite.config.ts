@@ -7,6 +7,8 @@ import { execSync } from 'child_process';
 import fs from 'fs';
 import os from 'os';
 
+import { cloudflare } from "@cloudflare/vite-plugin";
+
 /**
  * 专为本地含有 VPN/Clash 环境定制的穿透代理
  * 
@@ -165,7 +167,7 @@ function volcengineVPNBypassProxy(): Plugin {
 
 export default defineConfig(() => {
   return {
-    plugins: [volcengineVPNBypassProxy(), react(), tailwindcss()],
+    plugins: [volcengineVPNBypassProxy(), react(), tailwindcss(), cloudflare()],
     resolve: {
       alias: {
         '@': path.resolve(__dirname, '.'),
