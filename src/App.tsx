@@ -125,18 +125,27 @@ export default function App() {
 
   const handleThemeChange = async (theme: DesignTheme) => {
     if (!analysis || !image) return;
-    setSelectedTheme(theme);
-    setStep('generating_image');
-    setProgress(50);
-    const base64 = image.split(',')[1];
-    const productImg = await generateProductImage(base64, analysis, theme);
-    setGeneratedImage(productImg);
-    setProgress(75);
-    setStep('marketing');
-    const marketingCopy = await generateMarketing(analysis, theme);
-    setMarketing(marketingCopy);
-    setProgress(100);
-    setStep('completed');
+    try {
+      setSelectedTheme(theme);
+      setStep('generating_image');
+      setProgress(50);
+      const base64 = image.split(',')[1];
+      const productImg = await generateProductImage(base64, analysis, theme);
+      setGeneratedImage(productImg);
+      setProgress(75);
+      setStep('marketing');
+      const marketingCopy = await generateMarketing(analysis, theme);
+      setMarketing(marketingCopy);
+      setProgress(100);
+      setStep('completed');
+    } catch (error) {
+      console.error('Theme switch error:', error);
+      // Gracefully fallback to design step if image generation fails
+      setStep('completed');
+      setGeneratedImage(null);
+      setProgress(100);
+      alert(`生成失败: ${error instanceof Error ? error.message : JSON.stringify(error)}`);
+    }
   };
 
   return (

@@ -183,7 +183,7 @@ ${JSON.stringify(payload.analysis, null, 2)}
             model: "doubao-seedream-5-0-260128",
             prompt: prompt,
             response_format: "b64_json",
-            size: "1024x1024"
+            size: "2048x2048"
           })
         }, 120000); // 生图给更长的超时时间
 
