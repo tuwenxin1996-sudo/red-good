@@ -43,6 +43,12 @@ export default function App() {
   const [marketing, setMarketing] = useState<MarketingCopy | null>(null);
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isRunning, setIsRunning] = useState(false);
+
+  // Debug Logger
+  useEffect(() => {
+    console.log(`[Engine State] Step: ${step}, Progress: ${progress}%`);
+  }, [step, progress]);
 
   useEffect(() => {
     if (isDarkMode) {
@@ -71,9 +77,14 @@ export default function App() {
   } as any);
 
   const runEngine = async () => {
-    if (!image) return;
+    if (!image || isRunning) return;
 
     try {
+      setIsRunning(true);
+      setAnalysis(null);
+      setThemes([]);
+      setMarketing(null);
+      setGeneratedImage(null);
       // Step 1: Agent A - Scene Analyzer
       setStep('analyzing');
       setProgress(20);
@@ -107,8 +118,11 @@ export default function App() {
       setStep('completed');
     } catch (error) {
       console.error('Engine error:', error);
+      alert(`引擎执行出错: ${error instanceof Error ? error.message : '未知错误'}`);
       setStep('idle');
       setProgress(0);
+    } finally {
+      setIsRunning(false);
     }
   };
 
@@ -124,8 +138,9 @@ export default function App() {
   };
 
   const handleThemeChange = async (theme: DesignTheme) => {
-    if (!analysis || !image) return;
+    if (!analysis || !image || isRunning) return;
     try {
+      setIsRunning(true);
       setSelectedTheme(theme);
       setStep('generating_image');
       setProgress(50);
@@ -140,11 +155,12 @@ export default function App() {
       setStep('completed');
     } catch (error) {
       console.error('Theme switch error:', error);
-      // Gracefully fallback to design step if image generation fails
       setStep('completed');
       setGeneratedImage(null);
       setProgress(100);
-      alert(`生成失败: ${error instanceof Error ? error.message : JSON.stringify(error)}`);
+      alert(`切换方案失败: ${error instanceof Error ? error.message : '查看控制台详情'}`);
+    } finally {
+      setIsRunning(false);
     }
   };
 
